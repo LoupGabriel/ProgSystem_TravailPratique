@@ -23,15 +23,7 @@ public class PlayerController : MonoBehaviour
         m_animator = GetComponent<Animator>();
     }
 
-    private void OnEnable()
-    {
-        m_moveAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        m_moveAction.Disable();
-    }
+  
 
 
 
