@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class Npc : MonoBehaviour, Iinteractable,ITalkable
@@ -15,6 +16,7 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
     private bool m_isTyping, m_isDialogueActive;
     private Coroutine typeRoutineInstance;
 
+    private bool m_isChoosing;
 
     public bool canInteract()
     {
@@ -24,6 +26,20 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
     private void Start()
     {
         m_dialogueController = DialogueController.Instance;
+    }
+
+
+    private void Update()
+    {
+        if (!m_isDialogueActive || m_isChoosing)
+        {
+            return;
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Interact();
+        }
     }
     public void Interact()
     {
@@ -39,6 +55,7 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
         {
             //startDialogue
             StartDialogue();
+
         }
 
 
@@ -46,6 +63,8 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
 
     private void StartDialogue()
     {
+        PlayerInteract.Instance.SetDialogueState(true);
+
         m_isDialogueActive = true;
         m_dialogueIndex = 0;
 
@@ -124,6 +143,8 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
 
     private void DisplayChoice(DialogueChoice choice)
     {
+
+        m_isChoosing = true;
         for (int i = 0; i < choice.choices.Length; i++)
         {
             int nextIndex = choice.nextDialogueIndexes[i];
@@ -135,6 +156,8 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
 
     public void ChooseChoice(int nextIndex)
     {
+
+        m_isChoosing = false;
         m_dialogueIndex = nextIndex;
         m_dialogueController.ClearChoices();
         DisplayCurrentLine();
@@ -154,9 +177,18 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
         StopAllCoroutines();
         m_isDialogueActive = false;
         m_dialogueController.SetDialogueText("");
-        m_dialogueController.ShowDialogue(false);
-        
+
+        StartCoroutine(DialogueBoxRoutineEnd());
+
+        PlayerInteract.Instance.SetDialogueState(false);
     }
 
+   private IEnumerator DialogueBoxRoutineEnd() 
+    {
+
+        m_dialogueController.m_dialogueBoxAnimator.SetTrigger("endDialogue");
+        yield return new WaitForSeconds(0.25f);
+        m_dialogueController.ShowDialogue(false);
+    }
    
 }

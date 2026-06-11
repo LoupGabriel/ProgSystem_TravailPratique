@@ -4,13 +4,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteract : MonoBehaviour
 {
-    public Action OnPlayerInteract;
-
-    public static PlayerInteract Instance { get; private set; } 
-
+   
+    public Action<bool> OnInteractableChanged;
+    public Action<bool> OnDialogueStateChanged;
+    public static PlayerInteract Instance { get; private set; }
+    public bool m_isInDialogue { get; private set; }
     [SerializeField] private float m_interactionRadius = 2f;
-    public bool canInteract= false;
+    public bool m_canInteract= false;
 
+
+    private Npc m_currentNpc;
 
     private void Awake()
     {
@@ -19,25 +22,34 @@ public class PlayerInteract : MonoBehaviour
 
     private void Update()
     {
-
-        
-
-        if (GetInteractableObject() != null)
+        if (m_isInDialogue)
         {
-
-            if (Keyboard.current.eKey.wasPressedThisFrame)
-            {
-                GetInteractableObject().Interact();
-
-            }
-
+            return;
         }
+
+        Npc npc = GetInteractableObject();
+
+
+        if (npc != m_currentNpc)
+        { 
+             m_currentNpc = npc;
+            OnInteractableChanged?.Invoke(m_currentNpc != null);
+        }
+
+        if(m_currentNpc != null && Keyboard.current.eKey.wasPressedThisFrame )
+        {
+            m_currentNpc.Interact();
+        }
+       
 
         
     }
 
 
-
+    /// <summary>
+    /// Get npc in a sphere radius
+    /// </summary>
+    /// <returns></returns>
     public Npc GetInteractableObject()
     {
 
@@ -59,5 +71,12 @@ public class PlayerInteract : MonoBehaviour
 
     }
 
-   
+
+    public void SetDialogueState(bool state)
+    {
+        m_isInDialogue = state;
+        OnDialogueStateChanged?.Invoke(state);
+    }
+
+
 }

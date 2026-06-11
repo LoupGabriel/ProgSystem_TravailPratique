@@ -10,39 +10,68 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject m_interactableUi;
 
-    [SerializeField] private GameObject m_dialogRect;
+    [SerializeField] private RectTransform m_hungerProgressBar;
 
+    [SerializeField] private PlayerStats m_player;
+
+    private float m_hungerStep;
+    private float m_hungerProgressFull;
+    private bool m_isInDialogue;
     private void Awake()
     {
         Instance = this;
-    }
+        m_hungerProgressFull = m_hungerProgressBar.rect.width;
 
-    private void Update()
-    {
-        if(PlayerInteract.Instance.GetInteractableObject() != null)
-        {
-            m_interactableUi.SetActive(true);
-
-        }
-        else
-        {
-            m_interactableUi.SetActive(false);
-        }
         
        
+
     }
+    private void Start()
+    {
+        m_player.OnHungerChange += NotifyHungerChange;
+        m_hungerStep = m_hungerProgressFull / m_player.GetMaxHunger();
+ 
+        PlayerInteract.Instance.OnInteractableChanged += TogglePrompt;
+        PlayerInteract.Instance.OnDialogueStateChanged += SetDialogueState;
+    }
+
+    private void OnDestroy()
+    {
+        m_player.OnHungerChange -= NotifyHungerChange;
+        PlayerInteract.Instance.OnInteractableChanged -= TogglePrompt;
+        PlayerInteract.Instance.OnDialogueStateChanged -= SetDialogueState;
+    }
+
+  
 
  
 
-    private void ShowPrompt()
+    private void TogglePrompt(bool visible)
     {
-
-        m_interactableUi.SetActive(true);
+        if (m_isInDialogue)
+        {
+            m_interactableUi.SetActive(false);
+            return;
+        }
+        m_interactableUi.SetActive(visible);
     }
 
-    public void HidePrompt()
+    private void SetDialogueState(bool inDialogue)
     {
-        m_interactableUi.SetActive(false);
+        m_isInDialogue = inDialogue;
+
+        if (inDialogue)
+        {
+            m_interactableUi.SetActive(false);
+        }
+    }
+    private void NotifyHungerChange()
+    {
+        float targetWidth = m_hungerProgressBar.rect.width - m_hungerStep;
+        float clampWidth = Mathf.Clamp(targetWidth, 0, m_hungerProgressFull);
+        
+
+        m_hungerProgressBar.sizeDelta = new Vector2(clampWidth, m_hungerProgressBar.sizeDelta.y);
 
 
     }

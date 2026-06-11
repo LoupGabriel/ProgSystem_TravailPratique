@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if(PauseController.m_isGamePaused) return;
         HandleInput();
 
     }

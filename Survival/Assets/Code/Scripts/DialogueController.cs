@@ -13,7 +13,9 @@ public class DialogueController : MonoBehaviour
     [SerializeField] public Transform m_choicePanel;
 
     [SerializeField] public GameObject m_choiceButtonPrefab;
+    [SerializeField] public Animator m_dialogueBoxAnimator;
 
+  
 
     private void Awake()
     {
@@ -24,6 +26,8 @@ public class DialogueController : MonoBehaviour
     public void ShowDialogue(bool show)
     {
         m_dialoguePanel.SetActive(show);
+       
+        PauseController.SetPause(show);
     }
 
 
