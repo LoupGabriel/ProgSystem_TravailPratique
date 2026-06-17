@@ -8,13 +8,16 @@ public class DialogueTextData : ScriptableObject
 
     [TextArea(5,10)]
     public string[] dialogueLines;
+    
+  
 
     public float autoProgressDelay;
     public bool[] autoProgressLine;
     public bool[] endConversationLine;
+    public Color[] bubbleColor;
+    public Color[] lineColor;
 
 
-    
     public float typingSpeed = 0.05f;
     public AudioClip voiceSound;
     public float voicePitch = 1f;

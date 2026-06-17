@@ -3,18 +3,23 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 
-public class Npc : MonoBehaviour, Iinteractable,ITalkable
+public class Npc : MonoBehaviour, Iinteractable, ITalkable
 {
 
     [SerializeField] private DialogueTextData m_dialogueData;
+    [SerializeField] private Image m_textBubble;
     private DialogueController m_dialogueController;
-  
+
 
     private int m_dialogueIndex;
     private bool m_isTyping, m_isDialogueActive;
-    private Coroutine typeRoutineInstance;
+    private Coroutine DialogueBoxRoutineEndInstance;
+    private Coroutine ChangeBubbleColorInstance;
+    private Coroutine TypeLineRoutineInstance;
+
 
     private bool m_isChoosing;
 
@@ -82,8 +87,11 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
         if (m_isTyping)
         {
             //skip animation and show completed text
-            StopAllCoroutines();  
-            m_dialogueController.SetDialogueText(m_dialogueData.dialogueLines[m_dialogueIndex]);
+            if (TypeLineRoutineInstance != null)
+            {
+                StopCoroutine(TypeLineRoutineInstance);
+            }
+            m_dialogueController.SetDialogueText(m_dialogueData.dialogueLines[m_dialogueIndex], m_dialogueData.lineColor[m_dialogueIndex]);
             m_isTyping = false;
         }
 
@@ -91,7 +99,7 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
         m_dialogueController.ClearChoices();
 
         //check if line is ending text
-        if(m_dialogueData.endConversationLine.Length > m_dialogueIndex && m_dialogueData.endConversationLine[m_dialogueIndex])
+        if (m_dialogueData.endConversationLine.Length > m_dialogueIndex && m_dialogueData.endConversationLine[m_dialogueIndex])
         {
             EndDialogue();
             return;
@@ -100,9 +108,9 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
         }
 
 
-        foreach(DialogueChoice dialogueChoice in m_dialogueData.choices)
+        foreach (DialogueChoice dialogueChoice in m_dialogueData.choices)
         {
-            if(dialogueChoice.dialogueIndex == m_dialogueIndex)
+            if (dialogueChoice.dialogueIndex == m_dialogueIndex)
             {
 
                 //display choices panel
@@ -124,21 +132,8 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
     }
 
 
-    private IEnumerator TypeLineRoutine()
-    {
-        m_isTyping = true;
-        m_dialogueController.SetDialogueText("");
 
-        foreach (char letter in m_dialogueData.dialogueLines[m_dialogueIndex])
-        {
-         
-            m_dialogueController.SetDialogueText(m_dialogueController.m_dialogueText.text += letter);
-           yield return new WaitForSeconds(m_dialogueData.typingSpeed);
-        }
-        m_isTyping = false;
 
-      
-    }
 
 
     private void DisplayChoice(DialogueChoice choice)
@@ -156,7 +151,7 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
 
     public void ChooseChoice(int nextIndex)
     {
-
+        SfxManager.PlaySfx("Click");
         m_isChoosing = false;
         m_dialogueIndex = nextIndex;
         m_dialogueController.ClearChoices();
@@ -166,29 +161,76 @@ public class Npc : MonoBehaviour, Iinteractable,ITalkable
 
     private void DisplayCurrentLine()
     {
+        if (TypeLineRoutineInstance != null)
+        {
+            StopCoroutine(TypeLineRoutineInstance);
+        }
 
-        StopAllCoroutines();
-        StartCoroutine(TypeLineRoutine());
 
+        TypeLineRoutineInstance = StartCoroutine(TypeLineRoutine());
+        ChangeBubbleColorInstance = StartCoroutine(ChangeBubbleColor(m_textBubble, m_dialogueData.bubbleColor[m_dialogueIndex]));
 
     }
     public void EndDialogue()
     {
-        StopAllCoroutines();
-        m_isDialogueActive = false;
-        m_dialogueController.SetDialogueText("");
+        if (TypeLineRoutineInstance != null)
+        {
+            StopCoroutine(TypeLineRoutineInstance);
+        }
+        if(ChangeBubbleColorInstance != null)
+        {
 
-        StartCoroutine(DialogueBoxRoutineEnd());
+            StopCoroutine(ChangeBubbleColorInstance);
+        }
+            
+        
+        m_isDialogueActive = false;
+        m_dialogueController.SetDialogueText("", Color.white);
+
+        DialogueBoxRoutineEndInstance = StartCoroutine(DialogueBoxRoutineEnd());
 
         PlayerInteract.Instance.SetDialogueState(false);
     }
 
-   private IEnumerator DialogueBoxRoutineEnd() 
+    private IEnumerator DialogueBoxRoutineEnd()
     {
 
         m_dialogueController.m_dialogueBoxAnimator.SetTrigger("endDialogue");
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.35f);
         m_dialogueController.ShowDialogue(false);
     }
-   
+
+    private IEnumerator ChangeBubbleColor(Image bubblePanel, Color nextColor, float fadeDuration = 0.5f)
+    {
+        Color currentColor = bubblePanel.color;
+        float percent = 0;
+        while (percent < 1)
+        {
+            percent += Time.deltaTime / fadeDuration;
+            bubblePanel.color = Color.Lerp(currentColor, nextColor, percent);
+            yield return null;
+
+        }
+        bubblePanel.color = nextColor;
+
+
+
+    }
+    private IEnumerator TypeLineRoutine()
+    {
+        m_isTyping = true;
+        m_dialogueController.SetDialogueText("", Color.white);
+
+        foreach (char letter in m_dialogueData.dialogueLines[m_dialogueIndex])
+        {
+
+            m_dialogueController.SetDialogueText(m_dialogueController.m_dialogueText.text += letter,
+                m_dialogueData.lineColor[m_dialogueIndex]);
+            SfxManager.PlaySfx("Talk");
+            yield return new WaitForSeconds(m_dialogueData.typingSpeed);
+        }
+        m_isTyping = false;
+
+
+    }
 }

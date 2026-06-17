@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 public class DialogueController : MonoBehaviour
@@ -37,10 +38,11 @@ public class DialogueController : MonoBehaviour
 
     }
 
-    public void SetDialogueText(string text)
+    public void SetDialogueText(string text, Color color)
     {
 
         m_dialogueText.text = text;
+        m_dialogueText.color = color;
     }
 
 

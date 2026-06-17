@@ -30,10 +30,15 @@ public class PlayerStats : MonoBehaviour
 
     private IEnumerator HungerRoutine(float hungerTick,float hungerStep)
     {
-
+        bool hasPlaySfx=false;
         while (true)
         {
-            
+            if(m_currentHunger == 0 && !hasPlaySfx)
+            {
+                SfxManager.PlaySfx("Hungry");
+                SoundtrackManager.Instance.PlayMusic("Hungry");
+                hasPlaySfx = true;
+            }
             m_currentHunger -= hungerStep;
             OnHungerChange?.Invoke();
             m_currentHunger = Mathf.Clamp(m_currentHunger, 0, m_maxHunger);
