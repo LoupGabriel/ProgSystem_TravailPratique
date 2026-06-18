@@ -2246,7 +2246,7 @@ RectTransform:
   m_Father: {fileID: 1254605939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2949,7 +2949,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &972700149
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2978,7 +2978,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972700148}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -4245,8 +4245,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 870017818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6389,6 +6389,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4793780936355414586, guid: efcb22b83a865e04fa1a81c3b89531f5, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: dbbc53a6bc8f5c64bb234194ce1380aa, type: 3}
+    - target: {fileID: 4793780936355414586, guid: efcb22b83a865e04fa1a81c3b89531f5, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 3d3db111169c72f4eb613a61369b6b51, type: 2}
@@ -6506,33 +6510,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
-      propertyPath: m_dialogue
-      value: 
-      objectReference: {fileID: 11400000, guid: 40d532eba6e5c28479d44bdf0b90ccd2, type: 2}
-    - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
-      propertyPath: m_nameText
-      value: 
-      objectReference: {fileID: 990836918}
-    - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
       propertyPath: m_textBubble
       value: 
       objectReference: {fileID: 1165016595}
-    - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
-      propertyPath: m_dialogueData
-      value: 
-      objectReference: {fileID: 11400000, guid: 40d532eba6e5c28479d44bdf0b90ccd2, type: 2}
-    - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
-      propertyPath: m_dialogueText
-      value: 
-      objectReference: {fileID: 1057116513}
-    - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
-      propertyPath: m_dialoguePanel
-      value: 
-      objectReference: {fileID: 539167236}
-    - target: {fileID: 290333475128755580, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
-      propertyPath: m_dialogueManager
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 2662771593423185983, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.14
@@ -6573,6 +6553,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7573466162655063294, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: dbbc53a6bc8f5c64bb234194ce1380aa, type: 3}
     - target: {fileID: 7899170556230615140, guid: db92f6543d5dd1b4793a7fbbba97b5ad, type: 3}
       propertyPath: m_Name
       value: NPC_Loona

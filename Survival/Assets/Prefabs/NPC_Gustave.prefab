@@ -2520,7 +2520,7 @@ Animator:
   m_GameObject: {fileID: 3231135341931224861}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: dbbc53a6bc8f5c64bb234194ce1380aa, type: 3}
-  m_Controller: {fileID: 9100000, guid: afec2cc25e3439e4bb1b43e7c09f6503, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5582d939b74cd95418f4475d11d1cd77, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2566,6 +2566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_dialogueData: {fileID: 11400000, guid: eeddbac260a53c8478d5a3c7e09161fd, type: 2}
+  m_textBubble: {fileID: 0}
 --- !u!1 &3248704538275382248
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,9 +16,10 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
 
     private int m_dialogueIndex;
     private bool m_isTyping, m_isDialogueActive;
-    private Coroutine DialogueBoxRoutineEndInstance;
-    private Coroutine ChangeBubbleColorInstance;
-    private Coroutine TypeLineRoutineInstance;
+    private Coroutine m_dialogueBoxRoutineEndInstance;
+    private Coroutine m_changeBubbleColorInstance;
+    private Coroutine m_typeLineRoutineInstance;
+    private Coroutine m_textCompleteAnimation;
 
 
     private bool m_isChoosing;
@@ -40,12 +41,14 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
         {
             return;
         }
-
+        //interact with the mouse when dialogue is active
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             Interact();
         }
     }
+
+
     public void Interact()
     {
         if (m_dialogueData == null)
@@ -87,9 +90,9 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
         if (m_isTyping)
         {
             //skip animation and show completed text
-            if (TypeLineRoutineInstance != null)
+            if (m_typeLineRoutineInstance != null)
             {
-                StopCoroutine(TypeLineRoutineInstance);
+                StopCoroutine(m_typeLineRoutineInstance);
             }
             m_dialogueController.SetDialogueText(m_dialogueData.dialogueLines[m_dialogueIndex], m_dialogueData.lineColor[m_dialogueIndex]);
             m_isTyping = false;
@@ -135,7 +138,10 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
 
 
 
-
+    /// <summary>
+    /// Display the choice button
+    /// </summary>
+    /// <param name="choice"></param>
     private void DisplayChoice(DialogueChoice choice)
     {
 
@@ -148,7 +154,10 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
 
     }
 
-
+    /// <summary>
+    /// Display next text with the user choice
+    /// </summary>
+    /// <param name="nextIndex">The next text index</param>
     public void ChooseChoice(int nextIndex)
     {
         SfxManager.PlaySfx("Click");
@@ -158,40 +167,49 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
         DisplayCurrentLine();
     }
 
-
+    /// <summary>
+    /// Display the line with the typewriter effect
+    /// </summary>
     private void DisplayCurrentLine()
     {
-        if (TypeLineRoutineInstance != null)
+        if (m_typeLineRoutineInstance != null)
         {
-            StopCoroutine(TypeLineRoutineInstance);
+            StopCoroutine(m_typeLineRoutineInstance);
         }
 
 
-        TypeLineRoutineInstance = StartCoroutine(TypeLineRoutine());
-        ChangeBubbleColorInstance = StartCoroutine(ChangeBubbleColor(m_textBubble, m_dialogueData.bubbleColor[m_dialogueIndex]));
+        m_typeLineRoutineInstance = StartCoroutine(TypeLineRoutine());
+        m_changeBubbleColorInstance = StartCoroutine(ChangeBubbleColor(m_textBubble, m_dialogueData.bubbleColor[m_dialogueIndex]));
 
     }
+    /// <summary>
+    /// Stop the dialogue context
+    /// </summary>
     public void EndDialogue()
     {
-        if (TypeLineRoutineInstance != null)
+        if (m_typeLineRoutineInstance != null)
         {
-            StopCoroutine(TypeLineRoutineInstance);
+            StopCoroutine(m_typeLineRoutineInstance);
         }
-        if(ChangeBubbleColorInstance != null)
+        if(m_changeBubbleColorInstance != null)
         {
 
-            StopCoroutine(ChangeBubbleColorInstance);
+            StopCoroutine(m_changeBubbleColorInstance);
         }
             
         
         m_isDialogueActive = false;
         m_dialogueController.SetDialogueText("", Color.white);
 
-        DialogueBoxRoutineEndInstance = StartCoroutine(DialogueBoxRoutineEnd());
+        m_dialogueBoxRoutineEndInstance = StartCoroutine(DialogueBoxRoutineEnd());
 
         PlayerInteract.Instance.SetDialogueState(false);
     }
 
+    /// <summary>
+    /// Animate the bubble when closing
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator DialogueBoxRoutineEnd()
     {
 
@@ -200,6 +218,14 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
         m_dialogueController.ShowDialogue(false);
     }
 
+
+    /// <summary>
+    /// interpolate an image color 
+    /// </summary>
+    /// <param name="bubblePanel"> Image to interpolate</param>
+    /// <param name="nextColor">next color (b)</param>
+    /// <param name="fadeDuration">Time between interpolation</param>
+    /// <returns></returns>
     private IEnumerator ChangeBubbleColor(Image bubblePanel, Color nextColor, float fadeDuration = 0.5f)
     {
         Color currentColor = bubblePanel.color;
@@ -216,6 +242,11 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
 
 
     }
+
+    /// <summary>
+    /// Type text letter by letter
+    /// </summary>
+    
     private IEnumerator TypeLineRoutine()
     {
         m_isTyping = true;
@@ -230,7 +261,22 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
             yield return new WaitForSeconds(m_dialogueData.typingSpeed);
         }
         m_isTyping = false;
+       m_textCompleteAnimation = StartCoroutine(TextCompleteRoutine());
 
 
+}
+
+
+    private IEnumerator TextCompleteRoutine(float flashTime = 0.3f)
+    {
+        TMP_Text text = m_dialogueController.m_dialogueText;
+
+        while (!m_isTyping)
+        {
+            text.alpha = 0.7f;
+            yield return new WaitForSeconds(flashTime);
+            text.alpha = 0.3f;
+            yield return new WaitForSeconds(flashTime);
+        }
     }
 }

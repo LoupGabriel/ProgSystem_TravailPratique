@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (PauseController.m_isGamePaused) return;
         Movement();
         LookDirection();
     }

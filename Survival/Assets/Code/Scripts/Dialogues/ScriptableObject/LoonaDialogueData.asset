@@ -15,7 +15,7 @@ MonoBehaviour:
   npcName: Loona
   dialogueLines:
   - Hi there! I am Loona
-  - You must be the new rescue Gustav told me about!
+  - You must be the new rescue Gustave told me about!
   - Do you want to know a secret?
   - 'I was born with this pink hair ! '
   - 'Oh.. ok fine... '
