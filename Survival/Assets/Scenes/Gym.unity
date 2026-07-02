@@ -379,6 +379,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 754ba981baf3eda48a671c62ba17a4f8, type: 3}
+--- !u!1 &160381573
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 160381574}
+  - component: {fileID: 160381575}
+  m_Layer: 0
+  m_Name: EventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &160381574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160381573}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 535938243}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &160381575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160381573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cff7bc9752cca54c9850ff0c411ad29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &187288017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -528,7 +572,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 16.927979, y: 760.4}
-  m_SizeDelta: {x: 2500, y: 300}
+  m_SizeDelta: {x: 4000, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &206669060
 MonoBehaviour:
@@ -1459,6 +1503,7 @@ Transform:
   m_Children:
   - {fileID: 1895542820}
   - {fileID: 2022493908}
+  - {fileID: 160381574}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &539167236
@@ -1647,7 +1692,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_interactableUi: {fileID: 1929294010}
   m_hungerProgressBar: {fileID: 1394304081}
+  m_StaminaProgressBar: {fileID: 884897036}
   m_player: {fileID: 864223718}
+  m_staminaAnimator: {fileID: 1628762980}
 --- !u!114 &610688156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2502,6 +2549,8 @@ MonoBehaviour:
   m_actionAsset: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
   m_playerSpeed: 10
   m_playerTurnSpeed: 180
+  m_attackDamage: 1
+  m_attackStamina: 3
 --- !u!65 &864223712
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2551,6 +2600,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_maxHealth: 10
   m_maxStamina: 10
+  m_staminaRegen: 2
+  m_currentStamina: 0
   m_maxHunger: 10
   m_currentHunger: 0
 --- !u!1 &870017817
@@ -4510,6 +4561,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1628762979}
+  - component: {fileID: 1628762980}
   m_Layer: 5
   m_Name: StaminaBar (2)
   m_TagString: Untagged
@@ -4527,7 +4579,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 291750067}
   - {fileID: 884897036}
@@ -4539,6 +4591,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 265.5921, y: 56.0189}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!95 &1628762980
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628762978}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0f2353c027a04ba48851b40a7b52c01c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &1643660735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 417444, guid: 6910fda17f827d54e8d00714cc5b9709, type: 3}
@@ -4716,7 +4790,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 16.927979, y: -269.6}
-  m_SizeDelta: {x: 2500, y: 300}
+  m_SizeDelta: {x: 4000, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1693098547
 MonoBehaviour:
@@ -5967,6 +6041,9 @@ MonoBehaviour:
   - sfxName: Hungry
     audioClips:
     - {fileID: 8300000, guid: 2000b910c95df33439aa7edf166f24d4, type: 3}
+  - sfxName: Error
+    audioClips:
+    - {fileID: 8300000, guid: b4d1b780282df15469cffc8d9f46e0e7, type: 3}
 --- !u!114 &2022493911
 MonoBehaviour:
   m_ObjectHideFlags: 0

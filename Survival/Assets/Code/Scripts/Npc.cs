@@ -16,6 +16,7 @@ public class Npc : MonoBehaviour, Iinteractable, ITalkable
 
     private int m_dialogueIndex;
     private bool m_isTyping, m_isDialogueActive;
+
     private Coroutine m_dialogueBoxRoutineEndInstance;
     private Coroutine m_changeBubbleColorInstance;
     private Coroutine m_typeLineRoutineInstance;
