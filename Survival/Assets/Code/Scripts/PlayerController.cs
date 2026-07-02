@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
 
 
+
     [Header("Attack Stats")]
     [SerializeField] private int m_attackDamage;
     [SerializeField] private int m_attackStamina;
@@ -34,29 +35,29 @@ public class PlayerController : MonoBehaviour
         m_animator = GetComponent<Animator>();
     }
 
-  
+
 
 
 
     private void Update()
     {
-        if(PauseController.m_isGamePaused) return;
+        if (PauseController.m_isGamePaused) return;
         HandleInput();
         HandleAttack();
     }
     private void FixedUpdate()
     {
         if (PauseController.m_isGamePaused) return;
-        
+
         Movement();
-       
+
         LookDirection();
     }
     private void HandleInput()
     {
         m_moveAmount = m_moveAction.ReadValue<Vector2>();
         m_isAttacking = m_meleeAction.WasPressedThisFrame();
-       
+
         m_input = new Vector3(m_moveAmount.x, 0, m_moveAmount.y);
     }
 
@@ -71,35 +72,36 @@ public class PlayerController : MonoBehaviour
             //look at the input direction
             Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation,rotation, m_playerTurnSpeed);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, m_playerTurnSpeed);
         }
     }
     private void Movement()
     {
 
-        
+
 
         //move the player to the expect position 
-        m_rb.MovePosition(transform.position +(transform.forward * m_input.magnitude)*m_playerSpeed* Time.deltaTime);
-     
+        m_rb.MovePosition(transform.position + (transform.forward * m_input.magnitude) * m_playerSpeed * Time.deltaTime);
+
 
         //set animator data
-        m_animator.SetFloat("currentSpeed",Mathf.Abs(m_rb.linearVelocity.z));
+        m_animator.SetFloat("currentSpeed", Mathf.Abs(m_rb.linearVelocity.z));
     }
 
 
     private void HandleAttack()
     {
-        if(m_isAttacking)
+        if (m_isAttacking)
         {
             Dictionary<string, object> eventParam = new Dictionary<string, object>();
             eventParam.Add("AttackStamina", m_attackStamina);
             eventParam.Add("Attack", m_attackDamage);
-
+            m_animator.SetTrigger("Attack");
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_PLAYER_ATTACK, eventParam);
         }
-      
- 
-    }
 
+
+    }
 }
+
+   

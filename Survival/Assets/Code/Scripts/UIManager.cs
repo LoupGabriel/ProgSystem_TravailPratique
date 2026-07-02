@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private RectTransform m_hungerProgressBar;
     [SerializeField] private RectTransform m_StaminaProgressBar;
+    [SerializeField] private RectTransform m_healthProgressBar;
 
     [SerializeField] private PlayerStats m_player;
 
@@ -23,6 +24,11 @@ public class UIManager : MonoBehaviour
 
     private float m_StaminaStep;
     private float m_StaminaProgressFull;
+
+    private float m_healthProgressFull;
+
+
+    
   
     private bool m_isInDialogue;
     private void Awake()
@@ -30,7 +36,7 @@ public class UIManager : MonoBehaviour
         Instance = this;
         m_hungerProgressFull = m_hungerProgressBar.rect.width;
         m_StaminaProgressFull = m_StaminaProgressBar.rect.width;
-      
+        m_healthProgressFull = m_healthProgressBar.rect.width;
 
 
 
@@ -45,6 +51,9 @@ public class UIManager : MonoBehaviour
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_CONSUME_STAMINA, NotifyStaminaChange);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ADD_STAMINA, NotifyStaminaAdd);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_NOT_ENOUGHT_STAMINA, TriggerBarSquish);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+
 
 
     }
@@ -57,11 +66,13 @@ public class UIManager : MonoBehaviour
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_CONSUME_STAMINA, NotifyStaminaChange);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ADD_STAMINA, NotifyStaminaAdd);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_NOT_ENOUGHT_STAMINA, TriggerBarSquish);
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+
     }
 
-  
 
- 
+
+
 
     private void TogglePrompt(bool visible)
     {
@@ -117,6 +128,23 @@ public class UIManager : MonoBehaviour
         m_StaminaProgressBar.sizeDelta = new Vector2(clampWidth, m_StaminaProgressBar.sizeDelta.y);
 
     }
+
+
+
+    private void NotifyHealthBar(Dictionary<string, object> parameters)
+    {
+       float m_healthStep = m_healthProgressFull / m_player.GetMaxHealth() * (float)parameters["HealthChange"];
+
+
+        float targetWidth = m_healthProgressBar.rect.width - m_healthStep;
+        float clampWidth = Mathf.Clamp(targetWidth, 0, m_healthProgressFull);
+
+
+        m_healthProgressBar.sizeDelta = new Vector2(clampWidth, m_healthProgressBar.sizeDelta.y);
+    }
+
+
+
 
     private void TriggerBarSquish(Dictionary<string, object> parameters)
     {

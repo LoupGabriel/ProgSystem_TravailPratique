@@ -11,6 +11,8 @@ public enum EEvents
     ON_CONSUME_STAMINA,
     ON_ADD_STAMINA,
     ON_NOT_ENOUGHT_STAMINA,
+    ON_ENEMY_ATTACK,
+    ON_HEALTH_CHANGE
 }
 
 public class EventsManager : MonoBehaviour
