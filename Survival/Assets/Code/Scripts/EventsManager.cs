@@ -12,7 +12,10 @@ public enum EEvents
     ON_ADD_STAMINA,
     ON_NOT_ENOUGHT_STAMINA,
     ON_ENEMY_ATTACK,
-    ON_HEALTH_CHANGE
+    ON_HEALTH_CHANGE,
+    ON_PLAYER_DEAD,
+    ON_ITEM_CONSUME,
+    ON_INVENTORY_TOGGLE
 }
 
 public class EventsManager : MonoBehaviour
@@ -84,3 +87,6 @@ public class EventsManager : MonoBehaviour
         }
     }
 }
+
+
+

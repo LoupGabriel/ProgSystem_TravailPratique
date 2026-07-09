@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class EnemyAttack : EnemyState
 {
-
+    [SerializeField] private float m_chanceOfDefend = 0.35f;
 
     private float m_elapse = 0;
+    
     Dictionary<string, object> eventParam;
     public EnemyAttack(EnemyBehaviour behaviour) : base(behaviour)
     {
@@ -32,6 +33,16 @@ public class EnemyAttack : EnemyState
 
     private void TryAttack()
     {
-        EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENEMY_ATTACK, eventParam);
+        float random = Random.Range(0, 1);
+        if(random <= m_chanceOfDefend)
+        {
+            m_attachedBehavior.IsDefend(false);
+            EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENEMY_ATTACK, eventParam);
+        }
+        else
+        {
+            m_attachedBehavior.ChangeState(new EnemyDefend(m_attachedBehavior));
+        }
+        
     }
 }

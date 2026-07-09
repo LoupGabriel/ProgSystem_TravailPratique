@@ -10,11 +10,11 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     [SerializeField] private GameObject m_interactableUi;
-
+    [SerializeField] private GameObject m_inventoryPanel;
     [SerializeField] private RectTransform m_hungerProgressBar;
     [SerializeField] private RectTransform m_StaminaProgressBar;
     [SerializeField] private RectTransform m_healthProgressBar;
-
+    
     [SerializeField] private PlayerStats m_player;
 
     [SerializeField] private Animator m_staminaAnimator;
@@ -53,6 +53,8 @@ public class UIManager : MonoBehaviour
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_NOT_ENOUGHT_STAMINA, TriggerBarSquish);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_INVENTORY_TOGGLE, ToggleInventoryPanel);
+       
 
 
 
@@ -67,6 +69,7 @@ public class UIManager : MonoBehaviour
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ADD_STAMINA, NotifyStaminaAdd);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_NOT_ENOUGHT_STAMINA, TriggerBarSquish);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_INVENTORY_TOGGLE, ToggleInventoryPanel);
 
     }
 
@@ -133,7 +136,7 @@ public class UIManager : MonoBehaviour
 
     private void NotifyHealthBar(Dictionary<string, object> parameters)
     {
-       float m_healthStep = m_healthProgressFull / m_player.GetMaxHealth() * (float)parameters["HealthChange"];
+       float m_healthStep = m_healthProgressFull / (m_player.GetMaxHealth() * (float)parameters["HealthChange"] * 2);
 
 
         float targetWidth = m_healthProgressBar.rect.width - m_healthStep;
@@ -152,6 +155,21 @@ public class UIManager : MonoBehaviour
         SfxManager.PlaySfx("Error");
     }
 
-
+    private void ToggleInventoryPanel(Dictionary<string, object> parameters)
+    {
+        bool toggle = (bool)parameters["toggle"];
+        if (toggle)
+        {
+            m_inventoryPanel.SetActive(!m_inventoryPanel.activeSelf);
+            if(m_inventoryPanel.activeSelf == true)
+            {
+                PauseController.SetPause(true);
+            }
+            else
+            {
+                PauseController.SetPause(false);
+            }
+        }
+    }
 
 }

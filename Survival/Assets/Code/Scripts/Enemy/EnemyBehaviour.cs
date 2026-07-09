@@ -10,7 +10,9 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] private float m_speed = 3f;
     [SerializeField] public float m_distanceToAttack = 1f;
     [SerializeField] private float m_attackDamage = 1f;
-    
+    private bool m_isDefending = false;
+
+
     private void Start()
     {
         m_player = FindAnyObjectByType<PlayerStats>();
@@ -61,6 +63,10 @@ public class EnemyBehaviour : MonoBehaviour
     {
         return m_attackDamage;
     }
+    public void IsDefend(bool enemyDefend)
+    {
+        m_isDefending = enemyDefend;
+    }
 
 
     private void CheckforHit(Dictionary<string, object> parameters)
@@ -69,7 +75,7 @@ public class EnemyBehaviour : MonoBehaviour
         Vector3 direction = m_player.gameObject.transform.position - transform.position;
 
         float distance = direction.magnitude;
-        if(distance <= m_player.GetDistanceToHit())
+        if(distance <= m_player.GetDistanceToHit() && !m_isDefending)
         {
             ChangeState(new EnemyDead(this));   
         }

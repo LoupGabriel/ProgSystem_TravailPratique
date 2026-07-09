@@ -23,7 +23,7 @@ public class PlayerStats : MonoBehaviour
 
     private Coroutine m_hungerCoroutine;
     private Coroutine m_staminaCoroutine;
-
+    private bool m_isDead;
 
 
     Dictionary<string, object> eventParam;
@@ -39,12 +39,14 @@ public class PlayerStats : MonoBehaviour
 
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_PLAYER_ATTACK, ConsumeStamina);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ENEMY_ATTACK, GetHit);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_ITEM_CONSUME, AddRessource);
 
     }
     private void OnDestroy()
     {
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_PLAYER_ATTACK, ConsumeStamina);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ENEMY_ATTACK, GetHit);
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ITEM_CONSUME, AddRessource);
     }
     private IEnumerator HungerRoutine(float hungerTick, float hungerStep)
     {
@@ -131,12 +133,38 @@ public class PlayerStats : MonoBehaviour
         Dictionary<string, object> eventParam = new Dictionary<string, object>();
 
         eventParam.Add("HealthChange", (float)parameters["AttackDamage"]);
-
+        eventParam.Add("isDead", m_isDead);
         EventsManager.GetInstance().TriggerEvents(EEvents.ON_HEALTH_CHANGE, eventParam);
 
         if (m_currentHealth <= 0)
         {
             //invoke dead
+            EventsManager.GetInstance().TriggerEvents(EEvents.ON_PLAYER_DEAD, eventParam);
+
+        }
+    }
+
+    private void AddRessource(Dictionary<string,object> parameter)
+    {
+        EItemType type = (EItemType)parameter["type"];
+        int amount = (int)parameter["amount"];
+        switch (type)
+        {
+            case EItemType.FOOD:
+                {
+                    m_currentHealth += amount;
+                    break;
+                }
+            case EItemType.HEALTH:
+                {
+                    m_currentHunger += amount;
+                    break;
+                }
+            case EItemType.STAMINA:
+                {
+                    m_currentStamina += amount;
+                    break;
+                }
         }
     }
 
