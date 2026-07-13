@@ -5,6 +5,7 @@ public class EnemyBehaviour : MonoBehaviour
 {
     private EnemyState m_currentState;
 
+    [SerializeField] private List<Item> m_itemToDrop;
 
     private PlayerStats m_player;
     [SerializeField] private float m_speed = 3f;
@@ -12,12 +13,15 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] private float m_attackDamage = 1f;
     private bool m_isDefending = false;
 
+  
 
     private void Start()
     {
+        InventorySystem.GetInstance();
         m_player = FindAnyObjectByType<PlayerStats>();
         m_currentState = new EnemyIdle(this);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_PLAYER_ATTACK, CheckforHit);
+        
     }
     public void ChangeState(EnemyState newState)
     {
@@ -84,6 +88,14 @@ public class EnemyBehaviour : MonoBehaviour
 
     public void DestroyEnemy()
     {
+        
+        Item item = m_itemToDrop[Random.Range(0,m_itemToDrop.Count)];
+
+        Dictionary<string, object> eventParam = new Dictionary<string, object>();
+        eventParam.Add("DropItem", item);
+
+        EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENEMY_DEATH, eventParam);
+
         Destroy(this.gameObject);
     }
 

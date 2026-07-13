@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -25,10 +26,13 @@ public class PlayerStats : MonoBehaviour
     private Coroutine m_staminaCoroutine;
     private bool m_isDead;
 
+    private PlayerController m_controller;
 
     Dictionary<string, object> eventParam;
     private void Start()
     {
+
+        m_controller = GetComponent<PlayerController>();
         m_currentHunger = m_maxHunger;
         m_currentStamina = m_maxStamina;
         m_currentHealth = m_maxHealth;
@@ -48,6 +52,14 @@ public class PlayerStats : MonoBehaviour
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ENEMY_ATTACK, GetHit);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ITEM_CONSUME, AddRessource);
     }
+
+
+    /// <summary>
+    /// Update of hunger over time
+    /// </summary>
+    /// <param name="hungerTick">frequency of hunger </param>
+    /// <param name="hungerStep">number of hunger by frequency</param>
+    /// <returns></returns>
     private IEnumerator HungerRoutine(float hungerTick, float hungerStep)
     {
         bool hasPlaySfx = false;
@@ -68,10 +80,17 @@ public class PlayerStats : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// Stamina update over time
+    /// </summary>
+    /// <param name="StaminaTick">frequency of adding stamina</param>
+    /// <param name="staminaStep"> number of stamina by frequency</param>
+    /// <returns></returns>
     private IEnumerator StaminaRoutine(float StaminaTick, float staminaStep)
     {
         Dictionary<string, object> eventParam = new Dictionary<string, object>();
         eventParam.Add("AddStamina", staminaStep);
+        eventParam.Add("EnoughtStamina", true);
         while (true)
         {
 
@@ -80,7 +99,10 @@ public class PlayerStats : MonoBehaviour
             m_currentStamina = Mathf.Clamp(m_currentStamina, 0, m_maxStamina);
             yield return new WaitForSeconds(StaminaTick);
 
-
+            if(m_currentStamina >= staminaStep)
+            {
+                EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENOUGHT_STAMINA, eventParam);
+            }
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_ADD_STAMINA, eventParam);
         }
 
@@ -104,6 +126,11 @@ public class PlayerStats : MonoBehaviour
         return m_distanceToHit;
     }
 
+
+    /// <summary>
+    /// Handle stamina when attacking
+    /// </summary>
+    /// <param name="parameters"></param>
     private void ConsumeStamina(Dictionary<string, object> parameters)
     {
         Dictionary<string, object> eventParam = new Dictionary<string, object>();
@@ -115,8 +142,10 @@ public class PlayerStats : MonoBehaviour
         {
 
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_NOT_ENOUGHT_STAMINA, eventParam);
+            
             return;
         }
+        
 
 
         m_currentStamina -= staminaStep;
@@ -126,7 +155,10 @@ public class PlayerStats : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// Handle hit and health
+    /// </summary>
+    /// <param name="parameters"></param>
     private void GetHit(Dictionary<string, object> parameters)
     {
         m_currentHealth -= (float)parameters["AttackDamage"];
@@ -144,18 +176,23 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// update player stat when an item is used
+    /// </summary>
+    /// <param name="parameter"></param>
     private void AddRessource(Dictionary<string,object> parameter)
     {
-        EItemType type = (EItemType)parameter["type"];
-        int amount = (int)parameter["amount"];
+        EItemType type = (EItemType)parameter["Item"];
+        int amount = (int)parameter["Amount"];
         switch (type)
         {
-            case EItemType.FOOD:
+            case EItemType.HEALTH:
                 {
                     m_currentHealth += amount;
                     break;
                 }
-            case EItemType.HEALTH:
+            case EItemType.FOOD:
                 {
                     m_currentHunger += amount;
                     break;

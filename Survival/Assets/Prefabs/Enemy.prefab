@@ -155,6 +155,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d11551c3081c1459141f8efd3d7496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_itemToDrop:
+  - {fileID: 197693450514079282, guid: 77dc594e316d3f149aded2573c5aef10, type: 3}
+  - {fileID: 66450382217670830, guid: fbbee918a7a778743a2f0dd433a41d5a, type: 3}
+  - {fileID: 5603297322578409701, guid: a0b8b07c413ec9e4a92000fca6a85937, type: 3}
   m_speed: 1.5
   m_distanceToAttack: 1
   m_attackDamage: 1

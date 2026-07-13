@@ -15,7 +15,9 @@ public enum EEvents
     ON_HEALTH_CHANGE,
     ON_PLAYER_DEAD,
     ON_ITEM_CONSUME,
-    ON_INVENTORY_TOGGLE
+    ON_INVENTORY_TOGGLE,
+    ON_ENEMY_DEATH,
+    ON_ENOUGHT_STAMINA
 }
 
 public class EventsManager : MonoBehaviour

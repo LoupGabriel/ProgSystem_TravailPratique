@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [Header("Attack Stats")]
     [SerializeField] private int m_attackDamage;
     [SerializeField] private int m_attackStamina;
+    private bool m_canAttack = true;
 
     private bool m_noStamina = false;
 
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
     private bool m_isDead = false;
     private Rigidbody m_rb;
 
-    private Dictionary<string, object> eventParam = new Dictionary<string, object>();
+
     private void Start()
     {
         m_moveAction = m_actionAsset.FindAction("Move");
@@ -43,13 +44,15 @@ public class PlayerController : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
         m_animator = GetComponent<Animator>();
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_PLAYER_DEAD, TriggerDead);
-       
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_NOT_ENOUGHT_STAMINA, SetCantAttack);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_ENOUGHT_STAMINA, SetCanAttack);
     }
 
     private void OnDestroy()
     {
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_PLAYER_DEAD, TriggerDead);
-       
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_NOT_ENOUGHT_STAMINA, SetCantAttack);
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ENOUGHT_STAMINA, SetCanAttack);
     }
 
 
@@ -59,16 +62,9 @@ public class PlayerController : MonoBehaviour
         m_inventoryPress = m_inventory.WasPressedThisFrame();
         if (m_inventoryPress)
         {
-            Debug.Log("InventoryPress");
-            if (eventParam.ContainsKey("toggle"))
-            {
-                eventParam.Remove("toggle");
-                eventParam.Add("toggle", m_inventoryPress);
-            }
-            else
-            {
-                eventParam.Add("toggle", m_inventoryPress);
-            }
+            Dictionary<string, object> eventParam = new Dictionary<string, object>();
+            eventParam.Add("toggle", m_inventoryPress);
+          
           
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_INVENTORY_TOGGLE, eventParam);
             
@@ -120,20 +116,29 @@ public class PlayerController : MonoBehaviour
 
 
         //set animator data
-        m_animator.SetFloat("currentSpeed", Mathf.Abs(m_rb.linearVelocity.z));
+        if(m_rb.linearVelocity.z > 0 )
+        {
+            m_animator.SetTrigger("Run");
+        }
+        else
+        {
+            m_animator.SetTrigger("Idle");
+        }
+        
     }
 
 
     private void HandleAttack()
     {
         
-        if (m_isAttacking )
+        if (m_isAttacking && m_canAttack )
         {
             Dictionary<string, object> eventParam = new Dictionary<string, object>();
             eventParam.Add("AttackStamina", m_attackStamina);
             eventParam.Add("Attack", m_attackDamage);
             m_animator.SetTrigger("Attack");
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_PLAYER_ATTACK, eventParam);
+            SfxManager.PlaySfx("PlayerAttack");
         }
 
 
@@ -145,6 +150,16 @@ public class PlayerController : MonoBehaviour
         m_animator.SetTrigger("Dead");
         m_isDead = true;
 
+
+    }
+    public void SetCanAttack(Dictionary<string, object> param)
+    {
+        m_canAttack = (bool)param["EnoughtStamina"];
+
+    }
+    public void SetCantAttack(Dictionary<string, object> param)
+    {
+        m_canAttack = !(bool)param["NotEnoughtStamina"];
 
     }
 

@@ -38,6 +38,7 @@ public class EnemyAttack : EnemyState
         {
             m_attachedBehavior.IsDefend(false);
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENEMY_ATTACK, eventParam);
+            SfxManager.PlaySfx("SlimeAttack");
         }
         else
         {
