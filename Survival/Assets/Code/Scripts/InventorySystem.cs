@@ -28,12 +28,21 @@ public class InventorySystem
     }
 
     
-
+    /// <summary>
+    /// Add an item to the inventory list
+    /// </summary>
+    /// <param name="param"></param>
     private void AddItemToInventory(Dictionary<string,object> param)
     {
         m_currentItems.Add((Item)param["DropItem"]);
         SfxManager.PlaySfx("Item");
     }
+
+
+    /// <summary>
+    /// On click consume the item and make the effect
+    /// </summary>
+    /// <param name="item">item to consume</param>
     public void ConsumeItem(Item item)
     {
         if (item == null)

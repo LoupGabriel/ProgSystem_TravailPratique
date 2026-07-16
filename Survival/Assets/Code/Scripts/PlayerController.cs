@@ -33,15 +33,16 @@ public class PlayerController : MonoBehaviour
     private bool m_isDead = false;
     private Rigidbody m_rb;
 
-
+    
     private void Start()
     {
         m_moveAction = m_actionAsset.FindAction("Move");
         m_meleeAction = m_actionAsset.FindAction("Attack");
         m_inventory = m_actionAsset.FindAction("Inventory");
-      
 
+        
         m_rb = GetComponent<Rigidbody>();
+       
         m_animator = GetComponent<Animator>();
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_PLAYER_DEAD, TriggerDead);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_NOT_ENOUGHT_STAMINA, SetCantAttack);
@@ -109,14 +110,15 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
 
+        m_rb.MovePosition(
+       transform.position +
+       (transform.forward * m_input.magnitude) *
+       m_playerSpeed *
+       Time.deltaTime);
 
+        bool isMoving = m_input.magnitude > 0.01f;
 
-        //move the player to the expect position 
-        m_rb.MovePosition(transform.position + (transform.forward * m_input.magnitude) * m_playerSpeed * Time.deltaTime);
-
-
-        //set animator data
-        if(m_rb.linearVelocity.z > 0 )
+        if (isMoving)
         {
             m_animator.SetTrigger("Run");
         }
@@ -124,7 +126,7 @@ public class PlayerController : MonoBehaviour
         {
             m_animator.SetTrigger("Idle");
         }
-        
+
     }
 
 

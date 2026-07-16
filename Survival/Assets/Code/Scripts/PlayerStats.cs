@@ -25,7 +25,7 @@ public class PlayerStats : MonoBehaviour
     private Coroutine m_hungerCoroutine;
     private Coroutine m_staminaCoroutine;
     private bool m_isDead;
-
+    private bool m_dyingSfx = false;
     private PlayerController m_controller;
 
     Dictionary<string, object> eventParam;
@@ -171,8 +171,14 @@ public class PlayerStats : MonoBehaviour
         if (m_currentHealth <= 0)
         {
             //invoke dead
+           
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_PLAYER_DEAD, eventParam);
-
+            if (!m_dyingSfx)
+            {
+                SfxManager.PlaySfx("PlayerDying");
+                m_dyingSfx = true;
+            }
+           
         }
     }
 

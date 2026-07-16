@@ -13,10 +13,11 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] private float m_attackDamage = 1f;
     private bool m_isDefending = false;
 
-  
+    protected Animator m_animator;
 
     private void Start()
     {
+        m_animator = GetComponent<Animator>();
         InventorySystem.GetInstance();
         m_player = FindAnyObjectByType<PlayerStats>();
         m_currentState = new EnemyIdle(this);
@@ -97,6 +98,12 @@ public class EnemyBehaviour : MonoBehaviour
         EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENEMY_DEATH, eventParam);
 
         Destroy(this.gameObject);
+    }
+
+
+    public void SetTrigger(string trigger)
+    {
+        m_animator.SetTrigger(trigger);
     }
 
 

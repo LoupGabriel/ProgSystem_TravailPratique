@@ -20,6 +20,7 @@ public class EnemyDefend : EnemyState
         if(m_elapse > m_defendTime)
         {
             m_attachedBehavior.IsDefend(m_isDefend);
+            m_attachedBehavior.SetTrigger("Defend");
             m_elapse = 0;
             m_attachedBehavior.ChangeState(new EnemyIdle(m_attachedBehavior));
         }

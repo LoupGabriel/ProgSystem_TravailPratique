@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EnemyAttack : EnemyState
 {
-    [SerializeField] private float m_chanceOfDefend = 0.35f;
+    [SerializeField] private float m_chanceOfDefend = 0.5f;
 
     private float m_elapse = 0;
     
@@ -30,7 +30,9 @@ public class EnemyAttack : EnemyState
     }
 
 
-
+    /// <summary>
+    /// Trigger attack state
+    /// </summary>
     private void TryAttack()
     {
         float random = Random.Range(0, 1);
@@ -39,6 +41,7 @@ public class EnemyAttack : EnemyState
             m_attachedBehavior.IsDefend(false);
             EventsManager.GetInstance().TriggerEvents(EEvents.ON_ENEMY_ATTACK, eventParam);
             SfxManager.PlaySfx("SlimeAttack");
+            m_attachedBehavior.SetTrigger("Attack");
         }
         else
         {

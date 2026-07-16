@@ -2214,7 +2214,6 @@ GameObject:
   - component: {fileID: 518755743}
   - component: {fileID: 518755741}
   - component: {fileID: 518755744}
-  - component: {fileID: 518755745}
   m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
@@ -2288,19 +2287,6 @@ MonoBehaviour:
   m_inventoryItemParent: {fileID: 518755740}
   m_itemContainer: {fileID: 4113970405249841879, guid: eda3401de197418498a6a6b76c2cedbe, type: 3}
   m_tooltips: {fileID: 632765642}
---- !u!114 &518755745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 518755739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 624ac8d6f4a9c9842bfadf5caed8eb3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_currentItem: []
 --- !u!1 &526318921
 GameObject:
   m_ObjectHideFlags: 0
@@ -8535,6 +8521,9 @@ MonoBehaviour:
   - sfxName: ItemUsed
     audioClips:
     - {fileID: 8300000, guid: b68995aceaa30d840aa01af05b6efb0b, type: 3}
+  - sfxName: PlayerDying
+    audioClips:
+    - {fileID: 8300000, guid: 739613d7f435a534eac941727305ba7c, type: 3}
 --- !u!114 &2022493911
 MonoBehaviour:
   m_ObjectHideFlags: 0
