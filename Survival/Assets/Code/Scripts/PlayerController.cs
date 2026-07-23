@@ -149,7 +149,15 @@ public class PlayerController : MonoBehaviour
 
     private void TriggerDead(Dictionary<string, object> parameters)
     {
-        m_animator.SetTrigger("Dead");
+        if ((bool)parameters["hungerDeath"])
+        {
+            m_animator.SetTrigger("Hunger");
+        }
+        else
+        {
+            m_animator.SetTrigger("Dead");
+        }
+       
         m_isDead = true;
 
 

@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -11,10 +13,15 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject m_interactableUi;
     [SerializeField] private GameObject m_inventoryPanel;
+    [SerializeField] private GameObject m_gameOverPanel;
+
+    [SerializeField] private TMP_Text m_gameOverText;
     [SerializeField] private RectTransform m_hungerProgressBar;
     [SerializeField] private RectTransform m_staminaProgressBar;
     [SerializeField] private RectTransform m_healthProgressBar;
 
+
+   
     [SerializeField] private PlayerStats m_player;
 
     [SerializeField] private Animator m_staminaAnimator;
@@ -43,20 +50,27 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
+        
         m_player.OnHungerChange += NotifyHungerChange;
         m_hungerStep = m_hungerProgressFull / m_player.GetMaxHunger();
         m_healthStep = m_healthProgressFull / m_player.GetMaxHealth();
         m_staminaStep = m_staminaProgressFull / m_player.GetMaxStamina();
+
+        UpdateStatsOnLoad();
         m_inventoryPanel.SetActive(false);
+        m_gameOverPanel.SetActive(false);
         PlayerInteract.Instance.OnInteractableChanged += TogglePrompt;
         PlayerInteract.Instance.OnDialogueStateChanged += SetDialogueState;
+
+
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_CONSUME_STAMINA, NotifyStaminaChange);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ADD_STAMINA, NotifyStaminaAdd);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_NOT_ENOUGHT_STAMINA, TriggerBarSquish);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
-        EventsManager.GetInstance().SubscribeTo(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+       
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_INVENTORY_TOGGLE, ToggleInventoryPanel);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ITEM_CONSUME, NotifyConsumeItem);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_PLAYER_DEAD, ActiveGameOverPanel);
 
 
 
@@ -150,7 +164,21 @@ public class UIManager : MonoBehaviour
     }
 
 
+    private void UpdateStatsOnLoad()
+    {
+        float hungerRatio = m_player.m_currentHunger / m_player.GetMaxHunger();
+        float staminaRatio = m_player.m_currentStamina / m_player.GetMaxStamina();
+        float healthRatio = m_player.m_currentHealth / m_player.GetMaxHealth();
 
+        hungerRatio = Mathf.Clamp01(hungerRatio);
+        staminaRatio= Mathf.Clamp01(staminaRatio);
+        healthRatio = Mathf.Clamp01(healthRatio);
+
+        m_hungerProgressBar.sizeDelta = new Vector2(m_hungerProgressFull * hungerRatio, m_hungerProgressBar.sizeDelta.y);
+        m_staminaProgressBar.sizeDelta = new Vector2(m_staminaProgressFull * staminaRatio, m_staminaProgressBar.sizeDelta.y);
+        m_healthProgressBar.sizeDelta = new Vector2(m_healthProgressFull * healthRatio, m_healthProgressBar.sizeDelta.y);
+
+    }
 
     private void TriggerBarSquish(Dictionary<string, object> parameters)
     {
@@ -215,5 +243,37 @@ public class UIManager : MonoBehaviour
 
 
         }
+    }
+
+
+    private void ActiveGameOverPanel(Dictionary<string, object> param)
+    {
+        
+        //PauseController.SetPause(true);
+        m_gameOverPanel.SetActive(true);
+        m_gameOverPanel.GetComponent<CanvasGroup>().alpha = 0;
+        StartCoroutine(GameOverPanelRoutine(2));
+      
+        m_gameOverText.color = (Color)param["textColor"];
+    }
+
+
+    private IEnumerator GameOverPanelRoutine(float delay = 2f, float fadeDuration = 2f)
+    {
+        yield return new WaitForSeconds(delay);
+
+        CanvasGroup canvasGroup = m_gameOverPanel.GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 0;
+
+        float elapse = 0;
+
+        while(elapse < fadeDuration)
+        {
+            elapse += Time.deltaTime;
+            canvasGroup.alpha = elapse / fadeDuration;
+            yield return null;
+        }
+        
+        canvasGroup.alpha = 1;
     }
 }

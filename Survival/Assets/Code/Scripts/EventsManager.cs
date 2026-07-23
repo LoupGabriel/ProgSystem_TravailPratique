@@ -17,7 +17,8 @@ public enum EEvents
     ON_ITEM_CONSUME,
     ON_INVENTORY_TOGGLE,
     ON_ENEMY_DEATH,
-    ON_ENOUGHT_STAMINA
+    ON_ENOUGHT_STAMINA,
+    ON_SAVEGAME
 }
 
 public class EventsManager : MonoBehaviour

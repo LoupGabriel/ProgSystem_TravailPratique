@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private ItemSo m_itemData;
+    [SerializeField] public ItemSo m_itemData;
 
    
     /// <summary>

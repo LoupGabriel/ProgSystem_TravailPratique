@@ -18,6 +18,7 @@ public class UIInventory : MonoBehaviour
     {
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_INVENTORY_TOGGLE, RefreshInventory);
         m_tooltips.SetActive(false);
+       
     }
 
     private void OnDestroy()

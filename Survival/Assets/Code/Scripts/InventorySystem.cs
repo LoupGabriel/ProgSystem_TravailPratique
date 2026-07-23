@@ -9,11 +9,32 @@ public class InventorySystem
 
    
     public List<Item> m_currentItems;
-
+    private bool m_isNewGame = false;
     private InventorySystem()
     {
         m_currentItems = new List<Item>();
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ENEMY_DEATH, AddItemToInventory);
+
+
+        if (GameManager.GetInstance().m_shouldLoadSave)
+        {
+            SaveData data = SaveSystem.LoadGame();
+          
+            if (!m_isNewGame)
+            {
+                foreach (Item item in data.currentItems)
+                {
+                    m_currentItems.Add(item);
+                }
+            }
+        }
+        else
+        {
+            m_currentItems.Clear();
+        }
+
+        
+       
     }
 
     public static InventorySystem GetInstance()
@@ -36,6 +57,9 @@ public class InventorySystem
     {
         m_currentItems.Add((Item)param["DropItem"]);
         SfxManager.PlaySfx("Item");
+        Dictionary<string, object> eventParam = new Dictionary<string, object>();
+        eventParam.Add("items", m_currentItems);
+        EventsManager.GetInstance().TriggerEvents(EEvents.ON_SAVEGAME, eventParam);
     }
 
 
@@ -55,4 +79,11 @@ public class InventorySystem
 
         m_currentItems.Remove(item);
     }
+
+    public void SetIsNewGame(bool isNewGame)
+    {
+        m_isNewGame = isNewGame;
+    }
+
+  
 }
