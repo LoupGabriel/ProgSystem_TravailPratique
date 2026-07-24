@@ -48,6 +48,16 @@ public class InventorySystem
         return m_instance;
     }
 
+    public void Initialize()
+{
+    EventsManager.GetInstance().UnsubscribeFrom(
+        EEvents.ON_ENEMY_DEATH,
+        AddItemToInventory);
+
+    EventsManager.GetInstance().SubscribeTo(
+        EEvents.ON_ENEMY_DEATH,
+        AddItemToInventory);
+}
     
     /// <summary>
     /// Add an item to the inventory list

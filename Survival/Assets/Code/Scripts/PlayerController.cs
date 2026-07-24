@@ -174,6 +174,12 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    public void PlaySound(string soundToPlay)
+    {
+        SfxManager.PlaySfx(soundToPlay, gameObject.transform.position);
+    }
+
+
     
    
 }

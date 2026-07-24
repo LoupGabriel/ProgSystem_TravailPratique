@@ -59,8 +59,10 @@ public class PlayerStats : MonoBehaviour
 
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_PLAYER_ATTACK, ConsumeStamina);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ENEMY_ATTACK, GetHit);
+        EventsManager.GetInstance().SubscribeTo(EEvents.ON_PROJECTILE_HIT, GetHit);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_ITEM_CONSUME, AddRessource);
         EventsManager.GetInstance().SubscribeTo(EEvents.ON_SAVEGAME, Save);
+
 
     }
 
@@ -89,6 +91,7 @@ public class PlayerStats : MonoBehaviour
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ENEMY_ATTACK, GetHit);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ITEM_CONSUME, AddRessource);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_SAVEGAME, Save);
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_PROJECTILE_HIT, GetHit);
     }
 
 

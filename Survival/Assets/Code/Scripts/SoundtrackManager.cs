@@ -21,7 +21,7 @@ public class SoundtrackManager : MonoBehaviour
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        m_musicSlider.onValueChanged.AddListener(delegate { OnValueChanged(); });
+        //m_musicSlider.onValueChanged.AddListener(delegate { OnValueChanged(); });
     }
     private void Start()
     {

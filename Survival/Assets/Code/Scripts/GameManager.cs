@@ -35,12 +35,12 @@ public class GameManager : MonoBehaviour
     {
         PauseController.SetPause(false);
         m_shouldLoadSave = true;
-
+        InventorySystem.GetInstance().Initialize();
         SceneManager.LoadScene(sceneName);
     }
     public void NewGame(string sceneName)
     {
-
+       
         m_shouldLoadSave = false;
         SceneManager.LoadScene(sceneName);
     }

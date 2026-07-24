@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class SfxManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class SfxManager : MonoBehaviour
     private static AudioSource m_audioSource;
     private static SfxLibrary m_sfxLibrary;
 
-    [SerializeField] private  Slider m_sfxSlider;
+    [SerializeField] private  UnityEngine.UI.Slider m_sfxSlider;
 
 
     private void Awake()
@@ -40,18 +41,21 @@ public class SfxManager : MonoBehaviour
             OnValueChanged(m_sfxSlider.value);
         }
     }
-    public static void PlaySfx(string soundName)
+
+    public static void PlaySfx(string soundName,Vector3 position =  default)
     {
-        Instance.PlaySfxIntern(soundName);
+        Instance.PlaySfxIntern(soundName,position);
     }
 
-    private void PlaySfxIntern(string soundName)
+    private void PlaySfxIntern(string soundName, Vector3 position)
     {
         AudioClip audioClip = m_sfxLibrary.GetRandomClip(soundName);
 
         if (audioClip != null)
         {
             AudioSource availableSfx = m_audioPool.GetAvailableSource();
+            
+            availableSfx.transform.position = position;
             availableSfx.PlayOneShot(audioClip);
         }
     }

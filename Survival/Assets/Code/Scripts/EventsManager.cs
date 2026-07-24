@@ -18,7 +18,8 @@ public enum EEvents
     ON_INVENTORY_TOGGLE,
     ON_ENEMY_DEATH,
     ON_ENOUGHT_STAMINA,
-    ON_SAVEGAME
+    ON_SAVEGAME,
+    ON_PROJECTILE_HIT
 }
 
 public class EventsManager : MonoBehaviour
@@ -84,9 +85,10 @@ public class EventsManager : MonoBehaviour
 
     public void TriggerEvents(EEvents eventId, Dictionary<string, object> parameters)
     {
-        if (m_events[eventId] != null)
+        
+        if (m_events.TryGetValue(eventId, out var eventAction))
         {
-            m_events[eventId]?.Invoke(parameters);
+            eventAction?.Invoke(parameters);
         }
     }
 }
