@@ -78,11 +78,20 @@ public class EnemyBeamosBehavior : MonoBehaviour
     {
         if (!m_hasShoot)
         {
+            SfxManager.PlaySfx("Shoot");
             Projectile projectile = ProjectilePool.GetInstance().GetAvailableProjectile();
-            projectile.gameObject.transform.position = m_shootingTip.transform.position;
+           
+            projectile.transform.SetPositionAndRotation(m_shootingTip.position, m_shootingTip.rotation);
+           
             projectile.gameObject.SetActive(true);
+            projectile.ResetProjectile();
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            rb.AddForce(m_shootingTip.transform.forward * m_shootingForce);
+            rb.linearVelocity = Vector3.zero;
+
+            Vector3 shootingDirection = m_shootingTip.forward.normalized;
+            rb.AddForce(shootingDirection * m_shootingForce ,ForceMode.Impulse);
+
+           
             m_hasShoot = true;
         }
         

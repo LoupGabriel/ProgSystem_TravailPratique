@@ -82,6 +82,9 @@ public class PlayerStats : MonoBehaviour
         m_currentHunger = data.currentHunger;
         m_currentStamina = data.currentStamina;
 
+        
+
+
         transform.position = data.playerPos;
        
     }

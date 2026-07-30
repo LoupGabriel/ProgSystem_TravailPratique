@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (PauseController.m_isGamePaused) return;
-
+        if (m_isDead) return;
         Movement();
 
         LookDirection();
@@ -96,7 +96,11 @@ public class PlayerController : MonoBehaviour
 
     private void LookDirection()
     {
+        if (m_input.sqrMagnitude < 0.01f)
+            return;
 
+
+        
         if (m_input != Vector3.zero)
         {
             //calculated the input direction

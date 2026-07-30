@@ -5,7 +5,8 @@ public class ProjectilePool : MonoBehaviour
 {
 
     private static ProjectilePool Instance;
-
+    private List<Projectile> m_projectilesPool;
+    [SerializeField] private GameObject m_projectilePrefab;
 
     public static ProjectilePool GetInstance()
     {
@@ -24,16 +25,21 @@ public class ProjectilePool : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        m_projectilesPool =  new List<Projectile>();
     }
 
-    private List<Projectile> m_projectilesPool = new List<Projectile>();
-    [SerializeField] private GameObject m_projectilePrefab;
+  
 
     public Projectile GetAvailableProjectile()
     {
+
+        //clean old reference on loading
+        m_projectilesPool.RemoveAll(projectile => projectile == null);
+
         foreach (var p in m_projectilesPool)
         {
-            if (!p.isActiveAndEnabled)
+            if (!p.gameObject.activeInHierarchy)
             {
                 return p;
             }

@@ -243,7 +243,7 @@ Transform:
   m_GameObject: {fileID: 2346109491065856153}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.58}
+  m_LocalPosition: {x: 0, y: 0, z: 0.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -412,8 +412,8 @@ MonoBehaviour:
   m_projectile: {fileID: 2333744456479285615, guid: f7b9e962b77488e4b93d114e0ee68530, type: 3}
   m_head: {fileID: 34662912312543108}
   m_shootingTip: {fileID: 5482859355640645122}
-  m_rotationSpeed: 10
-  m_shootingForce: 100
+  m_rotationSpeed: 30
+  m_shootingForce: 20
   m_delayToRestart: 1
 --- !u!111 &427186605285725997
 Animation:

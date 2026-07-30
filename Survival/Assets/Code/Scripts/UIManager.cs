@@ -50,13 +50,13 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
-        
+        UpdateStatsOnLoad();
         m_player.OnHungerChange += NotifyHungerChange;
         m_hungerStep = m_hungerProgressFull / m_player.GetMaxHunger();
         m_healthStep = m_healthProgressFull / m_player.GetMaxHealth();
         m_staminaStep = m_staminaProgressFull / m_player.GetMaxStamina();
 
-        UpdateStatsOnLoad();
+        
         m_inventoryPanel.SetActive(false);
         m_gameOverPanel.SetActive(false);
         PlayerInteract.Instance.OnInteractableChanged += TogglePrompt;
@@ -153,7 +153,7 @@ public class UIManager : MonoBehaviour
 
     private void NotifyHealthBar(Dictionary<string, object> parameters)
     {
-        float m_healthStep = m_healthProgressFull / (m_player.GetMaxHealth() * (float)parameters["HealthChange"] * 2);
+        float m_healthStep = m_healthProgressFull / (m_player.GetMaxHealth() * (float)parameters["HealthChange"] );
 
 
         float targetWidth = m_healthProgressBar.rect.width - m_healthStep;
