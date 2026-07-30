@@ -86,8 +86,10 @@ public class UIManager : MonoBehaviour
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ADD_STAMINA, NotifyStaminaAdd);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_NOT_ENOUGHT_STAMINA, TriggerBarSquish);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_HEALTH_CHANGE, NotifyHealthBar);
+
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_INVENTORY_TOGGLE, ToggleInventoryPanel);
         EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_ITEM_CONSUME, NotifyConsumeItem);
+        EventsManager.GetInstance().UnsubscribeFrom(EEvents.ON_PLAYER_DEAD, ActiveGameOverPanel);
     }
 
 
